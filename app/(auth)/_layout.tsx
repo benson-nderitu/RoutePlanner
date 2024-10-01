@@ -4,14 +4,14 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen
-        name="Welcome"
+        name="welcome"
         options={{ headerShown: false }}
       />
+      {/* <Stack.Screen name="sign-up" options={{ headerShown: false }} /> */}
       <Stack.Screen
-        name="Sign-In"
+        name="sign-in"
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="+not-found" />
     </Stack>
   );
 };

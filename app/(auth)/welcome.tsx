@@ -28,7 +28,7 @@ const Onboarding = () => {
           <View className="w-[32px] h-[4px] mx-1 bg-[#E2e8F0] rounded-full" />
         }
         activeDot={
-          <View className="w-[32px] h-[4px] mx-1 bg-[#E2e8] rounded-full" />
+          <View className="w-[32px] h-[4px] mx-1 bg-primary-500 rounded-full" />
         }
         onIndexChanged={(index) => setActiveIndex(index)}>
         {onboarding.map((item) => (
