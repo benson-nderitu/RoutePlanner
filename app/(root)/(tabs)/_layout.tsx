@@ -55,7 +55,7 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.home}
+              source={icons.route}
               focused={focused}
             />
           ),
@@ -69,7 +69,7 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.profile}
+              source={icons.hcp}
               focused={focused}
             />
           ),

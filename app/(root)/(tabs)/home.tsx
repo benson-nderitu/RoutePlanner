@@ -9,6 +9,7 @@ import {
   StatusBar,
 } from 'react-native';
 import Dropdown from '@/components/Dropdown';
+import MultiSelectComponent from '@/components/Multiselect-Dropdown'; // Import MultiSelectComponent
 import DateTimePicker from 'react-native-ui-datepicker';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import dayjs from 'dayjs';
@@ -74,6 +75,15 @@ export default function Page() {
     { label: 'Institution 1', value: 'Institution 1' },
     { label: 'Institution 2', value: 'Institution 2' },
     { label: 'Institution 3', value: 'Institution 3' },
+    { label: 'Institution 4', value: 'Institution 4' },
+    { label: 'Institution 5', value: 'Institution 5' },
+    { label: 'Institution 6', value: 'Institution 6' },
+    { label: 'Institution 7', value: 'Institution 7' },
+    { label: 'Institution 8', value: 'Institution 8' },
+    { label: 'Institution 9', value: 'Institution 9' },
+    { label: 'Institution 10', value: 'Institution 10' },
+    { label: 'Institution 11', value: 'Institution 11' },
+    { label: 'Institution 12', value: 'Institution 12' },
   ];
 
   const handleInstitutionChange = (selectedItems: any) => {
@@ -85,12 +95,15 @@ export default function Page() {
       <StatusBar barStyle="dark-content" />
       <SafeAreaView
         style={{
-          backgroundColor: 'white',
+          backgroundColor: '#e5e5e5',
         }}>
         <SignedIn>
           <ScrollView>
-            <View className="items-center  bg-primary-500 p-5">
-              <Text className="text-2xl font-bold"> Route Planner Form</Text>
+            <View className="items-center  bg-primary-500 p-5 m-3 rounded-lg">
+              <Text className="text-2xl font-bold color-white">
+                {' '}
+                Route Planner Form
+              </Text>
             </View>
 
             <View className="pl-4 pr-4">
@@ -138,42 +151,64 @@ export default function Page() {
                 onChange={(item) => setDay(item.value)}
               />
 
-              {/* Date Picker */}
-              <View style={{ padding: 16 }}>
-                <TouchableOpacity
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  paddingBottom: 16,
+                  marginBottom: 20,
+                  borderRadius: 10,
+                }}>
+                <Text
                   style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    borderWidth: 0.5,
-                    borderColor: 'gray',
-                    borderRadius: 8,
-                    padding: 8,
-                    marginBottom: 10,
-                    height: 50,
+                    position: 'absolute',
+                    backgroundColor: 'white',
+                    color: '#4c4c4c',
+                    left: 22,
+                    top: 8,
+                    zIndex: 999,
                     paddingHorizontal: 8,
-                  }}
-                  onPress={() => setShowDatePicker(true)}>
-                  <AntDesign
-                    name="calendar"
-                    size={20}
-                    color="black"
-                    style={{ marginRight: 5 }}
-                  />
-                  <Text style={{ marginLeft: 8 }}>
-                    {date.format('DD/MM/YYYY')}
-                  </Text>
-                </TouchableOpacity>
+                    fontSize: 14,
+                  }}>
+                  Date
+                </Text>
 
-                {showDatePicker && (
-                  <DateTimePicker
-                    mode="single"
-                    date={date}
-                    onChange={(params) => {
-                      setDate(params.date);
-                      setShowDatePicker(false);
+                {/* Date Picker */}
+                <View style={{ padding: 16 }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      borderWidth: 0.5,
+                      borderColor: 'gray',
+                      borderRadius: 8,
+                      padding: 8,
+                      marginBottom: 10,
+                      height: 50,
+                      paddingHorizontal: 8,
                     }}
-                  />
-                )}
+                    onPress={() => setShowDatePicker(true)}>
+                    <AntDesign
+                      name="calendar"
+                      size={20}
+                      color="black"
+                      style={{ marginRight: 5 }}
+                    />
+                    <Text style={{ marginLeft: 8 }}>
+                      {date.format('DD/MM/YYYY')}
+                    </Text>
+                  </TouchableOpacity>
+
+                  {showDatePicker && (
+                    <DateTimePicker
+                      mode="single"
+                      date={date}
+                      onChange={(params) => {
+                        setDate(params.date);
+                        setShowDatePicker(false);
+                      }}
+                    />
+                  )}
+                </View>
               </View>
 
               {/* Agent Dropdown */}
@@ -197,22 +232,21 @@ export default function Page() {
               />
 
               {/* Institution Multi-Select */}
-              <Dropdown
+              <MultiSelectComponent
                 label="Institutions"
-                valueField="value"
                 data={institutions}
                 placeholder="Select Institution(s)"
+                onChangeValue={handleInstitutionChange}
                 value={institution}
-                multiple={true}
-                onChange={handleInstitutionChange}
               />
             </View>
             <View className="items-center justify-center">
               <CustomButton
                 title={'Submit'}
-                className="w-11/12 mt-5 mb-[120px]"
+                className="w-11/12 mb-[50px] mt-[50px]"
               />
             </View>
+            <View className="h-12 m-10"></View>
           </ScrollView>
         </SignedIn>
         <SignedOut>

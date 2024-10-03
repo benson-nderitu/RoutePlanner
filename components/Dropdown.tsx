@@ -56,7 +56,7 @@ const DropdownComponent = ({
             style={styles.icon}
             color={isFocus ? 'blue' : 'black'}
             name={icon}
-            size={0}
+            size={20}
           />
         )}
       />
@@ -68,8 +68,11 @@ export default DropdownComponent;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     padding: 16,
+    paddingBottom: 26,
+    marginBottom: 14,
+    borderRadius: 10,
   },
   dropdown: {
     height: 50,
