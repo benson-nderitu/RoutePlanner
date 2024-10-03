@@ -19,6 +19,10 @@ import pin from "@/assets/icons/pin.png";
 import point from "@/assets/icons/point.png";
 import profile from "@/assets/icons/profile.png";
 import search from "@/assets/icons/search.png";
+import newspaper from "@/assets/icons/newspaper.png";
+import medicalRecords from "@/assets/icons/medicalRecords.png";
+import healthData from "@/assets/icons/healthData.png";
+import route from "@/assets/icons/route.png";
 import selectedMarker from "@/assets/icons/selected-marker.png";
 import star from "@/assets/icons/star.png";
 import target from "@/assets/icons/target.png";
@@ -69,6 +73,10 @@ export const icons = {
   star,
   target,
   to,
+  healthData,
+  medicalRecords,
+  newspaper,
+  route,
 };
 
 export const onboarding = [

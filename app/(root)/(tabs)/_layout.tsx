@@ -13,7 +13,7 @@ const TabIcon = ({
   <View
     className={`flex flex-row justify-center items-center rounded-full ${focused ? 'bg-general-300' : ''}`}>
     <View
-      className={`rounded-full w-12 h-12 items-center justify-center ${focused ? 'bg-primary-500' : ''}`}>
+      className={`rounded-full w-12 h-12 items-center justify-center ${focused ? 'bg-general-400' : ''}`}>
       <Image
         source={source}
         tintColor="white"
@@ -33,14 +33,13 @@ export default function Layout() {
         tabBarInactiveTintColor: 'white',
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#191919',
-          borderTopLeftRadius: 0,
-          borderTopRightRadius: 0,
+          backgroundColor: '#333333',
+          borderRadius: 50,
           paddingBottom: 0, // ios only
           overflow: 'hidden',
-          marginHorizontal: 0,
-          marginBottom: 0,
-          height: 70,
+          marginHorizontal: 20,
+          marginBottom: 20,
+          height: 78,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -55,7 +54,20 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.route}
+              source={icons.home}
+              focused={focused}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="daily"
+        options={{
+          title: 'Daily',
+          headerShown: false,
+          tabBarIcon: ({ focused }) => (
+            <TabIcon
+              source={icons.list}
               focused={focused}
             />
           ),
@@ -63,13 +75,13 @@ export default function Layout() {
       />
 
       <Tabs.Screen
-        name="profile"
+        name="hcp"
         options={{
-          title: 'Profile',
+          title: 'HCP',
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.hcp}
+              source={icons.newspaper}
               focused={focused}
             />
           ),
