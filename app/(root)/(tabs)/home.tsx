@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
+import { SignedIn, SignedOut } from '@clerk/clerk-expo';
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -100,7 +100,7 @@ export default function Page() {
         <SignedIn>
           <ScrollView>
             <View className="items-center  bg-primary-500 p-5 m-3 rounded-lg">
-              <Text className="text-2xl font-bold color-white">
+              <Text className="text-2xl font-bold color-white font-JakartaBold">
                 {' '}
                 Route Planner Form
               </Text>

@@ -23,6 +23,7 @@ LogBox.ignoreLogs(['Clerk:']);
 
 export default function RootLayout() {
   const [loaded] = useFonts({
+    'Microsoft-SansSerif': require('../assets/fonts/micross.ttf'),
     'Jakarta-Bold': require('../assets/fonts/PlusJakartaSans-Bold.ttf'),
     'Jakarta-ExtraBold': require('../assets/fonts/PlusJakartaSans-ExtraBold.ttf'),
     'Jakarta-ExtraLight': require('../assets/fonts/PlusJakartaSans-ExtraLight.ttf'),

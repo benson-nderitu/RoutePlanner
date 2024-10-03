@@ -37,9 +37,9 @@ export default function Layout() {
           borderRadius: 50,
           paddingBottom: 0, // ios only
           overflow: 'hidden',
-          marginHorizontal: 20,
-          marginBottom: 20,
-          height: 78,
+          marginHorizontal: 15,
+          marginBottom: 10,
+          height: 58,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -54,7 +54,7 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.home}
+              source={icons.route}
               focused={focused}
             />
           ),
@@ -67,7 +67,7 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.list}
+              source={icons.medicalRecords}
               focused={focused}
             />
           ),
@@ -81,7 +81,7 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.newspaper}
+              source={icons.healthData}
               focused={focused}
             />
           ),
