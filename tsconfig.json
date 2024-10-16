@@ -1,6 +1,10 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
+    "esModuleInterop": true,
+    "resolveJsonModule": true,  // Add this line
+    "module": "esnext",         // Ensure this option is set
+    "moduleResolution": "node", // Ensure this option is set
     "strict": true,
     "paths": {
       "@/*": [

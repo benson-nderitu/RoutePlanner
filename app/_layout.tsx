@@ -4,9 +4,16 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { LogBox } from 'react-native';
+import { LogBox, useColorScheme } from 'react-native';
 
 import { tokenCache } from '@/lib/auth';
+// import {
+//   DarkTheme,
+//   ThemeProvider,
+//   DefaultTheme,
+// } from '@react-navigation/native';
+// import { ColorProperties } from 'react-native-reanimated/lib/typescript/reanimated2/Colors';
+// import { DefaultTheme } from 'react-native-paper';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -22,15 +29,15 @@ if (!publishableKey) {
 LogBox.ignoreLogs(['Clerk:']);
 
 export default function RootLayout() {
+  // const colorScheme = useColorScheme();
   const [loaded] = useFonts({
-    'Microsoft-SansSerif': require('../assets/fonts/micross.ttf'),
-    'Jakarta-Bold': require('../assets/fonts/PlusJakartaSans-Bold.ttf'),
-    'Jakarta-ExtraBold': require('../assets/fonts/PlusJakartaSans-ExtraBold.ttf'),
-    'Jakarta-ExtraLight': require('../assets/fonts/PlusJakartaSans-ExtraLight.ttf'),
-    'Jakarta-Light': require('../assets/fonts/PlusJakartaSans-Light.ttf'),
-    'Jakarta-Medium': require('../assets/fonts/PlusJakartaSans-Medium.ttf'),
-    Jakarta: require('../assets/fonts/PlusJakartaSans-Regular.ttf'),
-    'Jakarta-SemiBold': require('../assets/fonts/PlusJakartaSans-SemiBold.ttf'),
+    'Microsoft-SansSerif': require('../assets/fonts/microsoftsansserif.ttf'),
+    'Inter-Black': require('../assets/fonts/Inter-Black.otf'),
+    'Jakarta-Bold': require('../assets/fonts/selawkb.ttf'),
+    'Jakarta-ExtraBold': require('../assets/fonts/selawksb.ttf'),
+    'Jakarta-ExtraLight': require('../assets/fonts/selawksl.ttf'),
+    'Jakarta-Light': require('../assets/fonts/selawkl.ttf'),
+    'Jakarta-Medium': require('../assets/fonts/selawk.ttf'),
   });
 
   useEffect(() => {
@@ -44,6 +51,7 @@ export default function RootLayout() {
   }
 
   return (
+    // <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
     <ClerkProvider
       tokenCache={tokenCache}
       publishableKey={publishableKey}>
@@ -65,5 +73,6 @@ export default function RootLayout() {
         </Stack>
       </ClerkLoaded>
     </ClerkProvider>
+    // </ThemeProvider>
   );
 }

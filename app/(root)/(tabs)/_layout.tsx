@@ -67,7 +67,7 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon
-              source={icons.medicalRecords}
+              source={icons.list}
               focused={focused}
             />
           ),

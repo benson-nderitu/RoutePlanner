@@ -11,6 +11,7 @@ module.exports = {
         JakartaLight: ['Jakarta-Light', 'sans-serif'],
         JakartaMedium: ['Jakarta-Medium', 'sans-serif'],
         JakartaSemiBold: ['Jakarta-SemiBold', 'sans-serif'],
+        InterBlack: ['Inter-Black', 'sans-serif'],
         MicrosoftSansSerif: ['Microsoft-SansSerif, Sans-Serif'],
       },
       colors: {
@@ -79,7 +80,6 @@ module.exports = {
           700: '#EBEBEB',
           800: '#ADADAD',
         },
-        customblue: '#0101e2',
       },
     },
   },
