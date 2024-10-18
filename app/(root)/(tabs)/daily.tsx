@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   StatusBar,
@@ -6,10 +6,10 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { Dropdown, MultiSelect } from 'react-native-element-dropdown';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import institutionsData from '../../data/Institutions.json';
+} from "react-native";
+import { Dropdown, MultiSelect } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import institutionsData from "../../data/Institutions.json";
 
 const App = () => {
   const [nameData, setNameData] = useState([]);
@@ -35,7 +35,7 @@ const App = () => {
       ...new Set(
         institutionsData
           .filter((item) => item.Agent === selectedName)
-          .map((item) => item.Region)
+          .map((item) => item.Region),
       ),
     ].map((region) => ({ value: region, label: region }));
 
@@ -54,10 +54,10 @@ const App = () => {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
-      <View style={{ backgroundColor: '#fff', padding: 20, borderRadius: 15 }}>
+      <View style={{ backgroundColor: "#fff", padding: 20, borderRadius: 15 }}>
         {/* Name Dropdown */}
         <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
@@ -67,7 +67,7 @@ const App = () => {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus ? 'Select Name' : '...'}
+          placeholder={!isFocus ? "Select Name" : "..."}
           searchPlaceholder="Search..."
           value={name}
           onFocus={() => setIsFocus(true)}
@@ -82,7 +82,7 @@ const App = () => {
 
         {/* Region Dropdown */}
         <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
@@ -92,7 +92,7 @@ const App = () => {
           maxHeight={300}
           labelField="label"
           valueField="value"
-          placeholder={!isFocus ? 'Select Region' : '...'}
+          placeholder={!isFocus ? "Select Region" : "..."}
           searchPlaceholder="Search..."
           value={region}
           onFocus={() => setIsFocus(true)}
@@ -107,7 +107,7 @@ const App = () => {
 
         {/* Institution MultiSelect */}
         <MultiSelect
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+          style={[styles.dropdown, isFocus && { borderColor: "blue" }]}
           placeholderStyle={styles.placeholderStyle}
           selectedTextStyle={styles.selectedTextStyle}
           inputSearchStyle={styles.inputSearchStyle}
@@ -144,11 +144,12 @@ const App = () => {
             Alert.alert(
               `You have selected\nName: ${name}\nRegion: ${region}\nInstitutions: ${selectedInstitutions
                 .map(
-                  (inst) => institutionData.find((i) => i.value === inst).label
+                  (inst) => institutionData.find((i) => i.value === inst).label,
                 )
-                .join(', ')}`
+                .join(", ")}`,
             )
-          }>
+          }
+        >
           <Text style={styles.submitText}>Submit</Text>
         </TouchableOpacity>
       </View>
@@ -161,23 +162,20 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#533483',
+    backgroundColor: "#533483",
     padding: 16,
-    justifyContent: 'center',
-    alignContent: 'center',
+    justifyContent: "center",
+    alignContent: "center",
   },
   dropdown: {
     height: 50,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
     marginBottom: 10,
   },
   placeholderStyle: {
-    fontSize: 16,
-  },
-  selectedTextStyle: {
     fontSize: 16,
   },
   iconStyle: {
@@ -193,20 +191,21 @@ const styles = StyleSheet.create({
   },
   selectedTextStyle: {
     fontSize: 16,
-    color: '#9c049c',
+    color: "#9c049c",
   },
   submitButton: {
-    backgroundColor: '#0F3460',
+    backgroundColor: "#0F3460",
     padding: 20,
     borderRadius: 15,
-    alignItems: 'center',
+    alignItems: "center",
   },
   submitText: {
-    color: '#fff',
-    textTransform: 'uppercase',
-    fontWeight: '600',
+    color: "#fff",
+    textTransform: "uppercase",
+    fontWeight: "600",
   },
   selectedStyle: {
     borderRadius: 12,
+    color: "#9c049c",
   },
 });

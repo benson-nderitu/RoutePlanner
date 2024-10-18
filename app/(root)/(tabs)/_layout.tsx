@@ -1,7 +1,7 @@
-import { Tabs } from 'expo-router';
-import { Image, ImageSourcePropType, View } from 'react-native';
+import { Tabs } from "expo-router";
+import { Image, ImageSourcePropType, View } from "react-native";
 
-import { icons } from '@/constants';
+import { icons } from "@/constants";
 
 const TabIcon = ({
   source,
@@ -11,9 +11,11 @@ const TabIcon = ({
   focused: boolean;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${focused ? 'bg-general-300' : ''}`}>
+    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""}`}
+  >
     <View
-      className={`rounded-full w-12 h-12 items-center justify-center ${focused ? 'bg-primary-500' : ''}`}>
+      className={`flex items-center justify-center rounded-full w-12 h-12 ${focused ? "bg-[#1D4ED8]" : "bg-transparent"}`}
+    >
       <Image
         source={source}
         tintColor="white"
@@ -29,47 +31,42 @@ export default function Layout() {
     <Tabs
       initialRouteName="index"
       screenOptions={{
-        tabBarActiveTintColor: 'white',
-        tabBarInactiveTintColor: 'white',
+        tabBarActiveTintColor: "white",
+        tabBarInactiveTintColor: "white",
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: '#333333',
+          backgroundColor: "#333333",
           borderRadius: 50,
           paddingBottom: 0, // ios only
-          overflow: 'hidden',
+          overflow: "hidden",
           marginHorizontal: 15,
           marginBottom: 10,
           height: 58,
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          flexDirection: 'row',
-          position: 'absolute',
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: "row",
+          position: "absolute",
         },
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
+          title: "Home",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon
-              source={icons.route}
-              focused={focused}
-            />
+            <TabIcon source={icons.route} focused={focused} />
           ),
         }}
       />
       <Tabs.Screen
         name="daily"
         options={{
-          title: 'Daily',
+          title: "Daily",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon
-              source={icons.list}
-              focused={focused}
-            />
+            <TabIcon source={icons.list} focused={focused} />
           ),
         }}
       />
@@ -77,13 +74,10 @@ export default function Layout() {
       <Tabs.Screen
         name="hcp"
         options={{
-          title: 'HCP',
+          title: "HCP",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon
-              source={icons.healthData}
-              focused={focused}
-            />
+            <TabIcon source={icons.healthData} focused={focused} />
           ),
         }}
       />
