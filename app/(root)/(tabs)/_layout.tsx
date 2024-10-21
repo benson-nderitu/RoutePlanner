@@ -1,20 +1,22 @@
 import { Tabs } from "expo-router";
-import { Image, ImageSourcePropType, View } from "react-native";
+import { Image, ImageSourcePropType, View, Text } from "react-native";
 
 import { icons } from "@/constants";
 
 const TabIcon = ({
   source,
   focused,
+  label,
 }: {
   source: ImageSourcePropType;
   focused: boolean;
+  label: string;
 }) => (
   <View
-    className={`flex flex-row justify-center items-center rounded-full ${focused ? "bg-general-300" : ""}`}
+    className={`flex flex-row justify-center items-center rounded-full  ${focused ? "bg-general-300" : ""}`}
   >
     <View
-      className={`flex items-center justify-center rounded-full w-12 h-12 ${focused ? "bg-[#1D4ED8]" : "bg-transparent"}`}
+      className={`flex items-center justify-center rounded-full w-[70] h-[70] ${focused ? "bg-[#1D4ED8]" : "bg-transparent"}`}
     >
       <Image
         source={source}
@@ -22,6 +24,16 @@ const TabIcon = ({
         resizeMode="contain"
         className="w-7 h-7"
       />
+      <Text
+        style={{
+          color: focused ? "white" : "#000",
+          fontFamily: "Poppins-Bold",
+          fontSize: 12,
+          marginTop: 3,
+        }}
+      >
+        {label}
+      </Text>
     </View>
   </View>
 );
@@ -35,13 +47,11 @@ export default function Layout() {
         tabBarInactiveTintColor: "white",
         tabBarShowLabel: false,
         tabBarStyle: {
-          backgroundColor: "#333333",
-          borderRadius: 50,
+          backgroundColor: "#b9b8b8",
           paddingBottom: 0, // ios only
           overflow: "hidden",
-          marginHorizontal: 15,
-          marginBottom: 10,
-          height: 58,
+          marginBottom: 0,
+          height: 80,
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -53,20 +63,19 @@ export default function Layout() {
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
-          headerShown: false,
+          title: "Daily Report",
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: "#1D4ED8",
+          },
+          headerTitleStyle: {
+            fontFamily: "Poppins-Bold",
+            fontSize: 24,
+            color: "white",
+          },
           tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.route} focused={focused} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="daily"
-        options={{
-          title: "Daily",
-          headerShown: false,
-          tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.list} focused={focused} />
+            <TabIcon source={icons.list} focused={focused} label={"Daily"} />
           ),
         }}
       />
@@ -75,9 +84,41 @@ export default function Layout() {
         name="hcp"
         options={{
           title: "HCP",
-          headerShown: false,
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: "#1D4ED8",
+          },
+          headerTitleStyle: {
+            fontFamily: "Poppins-Bold",
+            fontSize: 24,
+            color: "white",
+          },
           tabBarIcon: ({ focused }) => (
-            <TabIcon source={icons.healthData} focused={focused} />
+            <TabIcon
+              source={icons.healthData}
+              focused={focused}
+              label={"HCP"}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="route"
+        options={{
+          title: "Route Planner",
+          headerShown: true,
+          headerTitleAlign: "center",
+          headerStyle: {
+            backgroundColor: "#1D4ED8",
+          },
+          headerTitleStyle: {
+            fontFamily: "Poppins-Bold",
+            fontSize: 24,
+            color: "white",
+          },
+          tabBarIcon: ({ focused }) => (
+            <TabIcon source={icons.route} focused={focused} label={"Route"} />
           ),
         }}
       />

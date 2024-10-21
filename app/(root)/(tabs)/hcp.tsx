@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, Button, Alert, Modal, Pressable } from "react-native";
+import { View, Text, ActivityIndicator } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import CustomButton from "@/components/CustomButton";
+import CustomAlert from "@/components/CustomAlert"; // Adjust path as necessary
 
 interface FormDataType {
   name: string;
@@ -36,8 +38,12 @@ export default function App(): JSX.Element {
     email: "",
     message: "",
   });
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [modalMessage, setModalMessage] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [alertVisible, setAlertVisible] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [alertType, setAlertType] = useState<"success" | "danger" | "primary">(
+    "success",
+  );
 
   const handleChange = (field: keyof FormDataType, value: string) => {
     setFormData({ ...formData, [field]: value });
@@ -49,6 +55,8 @@ export default function App(): JSX.Element {
     form.append("Email", formData.email);
     form.append("Message", formData.message);
 
+    setLoading(true); // Set loading to true when starting to submit
+
     fetch(
       "https://script.google.com/macros/s/AKfycbx9sA81Vm2LVDzOiT4yI3ofMxJHK0XYjVEn5tJYbxYzI9mV2smf89qW3RTmcoMOyXjP/exec",
       {
@@ -56,22 +64,28 @@ export default function App(): JSX.Element {
         body: form,
       },
     )
-      .then((response) => response.text()) // Handle plain text response
+      .then((response) => response.text())
       .then((message) => {
         console.log("Response from server:", message);
-
-        // Display message from server in the modal
-        setModalMessage(message);
-        setModalVisible(true);
-
-        // Reset the form fields after successful submission
-        setFormData({ name: "", email: "", message: "" });
+        setAlertType("success"); // Set alert type to success
+        setAlertMessage(message);
+        setAlertVisible(true);
+        resetForm();
       })
       .catch((error) => {
-        setModalMessage("Error: There was a problem sending your message.");
-        setModalVisible(true);
         console.error(error);
+        setAlertType("danger"); // Set alert type to danger
+        setAlertMessage("There was a problem sending your message.");
+        setAlertVisible(true);
+      })
+      .finally(() => {
+        setLoading(false); // Reset loading regardless of success or error
       });
+  };
+
+  const resetForm = () => {
+    // Reset the form fields after successful submission
+    setFormData({ name: "", email: "", message: "" });
   };
 
   return (
@@ -84,7 +98,6 @@ export default function App(): JSX.Element {
       </Text>
 
       <View className="mb-4">
-        {/* Name Dropdown */}
         <Dropdown
           className="border border-gray-300 rounded p-3 mb-4"
           data={nameOptions}
@@ -98,7 +111,6 @@ export default function App(): JSX.Element {
           )}
         />
 
-        {/* Email Dropdown */}
         <Dropdown
           className="border border-gray-300 rounded p-3 mb-4"
           data={emailOptions}
@@ -112,7 +124,6 @@ export default function App(): JSX.Element {
           )}
         />
 
-        {/* Message Dropdown */}
         <Dropdown
           className="border border-gray-300 rounded p-3 mb-4"
           data={messageOptions}
@@ -132,30 +143,26 @@ export default function App(): JSX.Element {
         />
 
         {/* Submit Button */}
-        <Button title="Submit" onPress={submitForm} />
+        <CustomButton title="Submit" onPress={submitForm} />
       </View>
 
-      {/* Modal to display success/error message */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View className="flex-1 justify-center items-center">
-          <View className="bg-white rounded-lg p-5 w-3/4">
-            <Text className="text-lg font-bold mb-4 text-center">
-              {modalMessage}
-            </Text>
-            <Pressable
-              className="bg-blue-500 rounded p-3 mt-4"
-              onPress={() => setModalVisible(false)}
-            >
-              <Text className="text-white text-center">Close</Text>
-            </Pressable>
-          </View>
+      {/* Loading Indicator */}
+      {loading && (
+        <View className="flex-row justify-center items-center mb-4">
+          <ActivityIndicator size="large" color="#1D4ED8" />
+          <Text className="ml-2">Sending your data...</Text>
         </View>
-      </Modal>
+      )}
+
+      {/* Custom Alert */}
+      {alertVisible && (
+        <CustomAlert
+          title={alertType === "success" ? "Success" : "Error"}
+          message={alertMessage}
+          type={alertType}
+          onClose={() => setAlertVisible(false)}
+        />
+      )}
     </View>
   );
 }

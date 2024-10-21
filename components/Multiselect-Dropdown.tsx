@@ -10,6 +10,8 @@ interface MultiSelectComponentProps {
   onChangeValue: (selected: string[]) => void;
   placeholder?: string;
   renderLeftIcon?: () => JSX.Element;
+  label?: string; // Optional label text
+  labelStyle?: object; // Optional styles for the label
 }
 
 const MultiSelectComponent: React.FC<MultiSelectComponentProps> = ({
@@ -18,13 +20,17 @@ const MultiSelectComponent: React.FC<MultiSelectComponentProps> = ({
   onChangeValue,
   placeholder,
   renderLeftIcon,
+  label, // Add label prop
+  labelStyle, // Add optional label style
 }) => {
   const [selected, setSelected] = useState<string[]>(value || []);
+  const [isFocus, setIsFocus] = useState<boolean>(false);
 
   const handleChange = (item: { label: string; value: string }) => {
     const newSelected = selected.includes(item.value)
       ? selected.filter((i) => i !== item.value)
       : [...selected, item.value];
+    setIsFocus(false);
 
     setSelected(newSelected);
     onChangeValue(newSelected);
@@ -49,6 +55,11 @@ const MultiSelectComponent: React.FC<MultiSelectComponentProps> = ({
 
   return (
     <View style={styles.container}>
+      {label && (
+        <Text style={[styles.label, labelStyle, isFocus && { color: "blue" }]}>
+          {label}
+        </Text>
+      )}
       <MultiSelect
         style={styles.dropdown}
         placeholderStyle={styles.placeholderStyle}
@@ -62,6 +73,8 @@ const MultiSelectComponent: React.FC<MultiSelectComponentProps> = ({
         placeholder={placeholder || "Select item(s)"}
         searchPlaceholder="Search..."
         value={selected}
+        onFocus={() => setIsFocus(true)}
+        onBlur={() => setIsFocus(false)}
         onChange={setSelected}
         renderItem={renderItem}
         selectedStyle={styles.selectedStyle} // Style for selected view
@@ -90,8 +103,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: "Poppins-Regular",
   },
-  icon: {
-    marginRight: 5,
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    color: "#4c4c4c",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 10,
+    fontFamily: "Poppins-Regular",
   },
   placeholderStyle: {
     fontSize: 16,

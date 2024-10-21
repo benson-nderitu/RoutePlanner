@@ -12,6 +12,9 @@ interface DropdownComponentProps {
   renderLeftIcon?: () => JSX.Element; // Optional function that returns JSX element (icon)
   label?: string; // Optional label text
   labelStyle?: object; // Optional styles for the label
+  activeColor?: string; // Optional prop for active item background color
+  activeTextStyle?: object; // Optional custom text style for active/selected item
+  value?: string;
 }
 
 const DropdownComponent: React.FC<DropdownComponentProps> = ({
@@ -23,6 +26,8 @@ const DropdownComponent: React.FC<DropdownComponentProps> = ({
   renderLeftIcon, // Optional icon rendering prop
   label, // Add label prop
   labelStyle, // Add optional label style
+  activeColor = "#D3E9FF", // Default active color for selected item background
+  activeTextStyle = { color: "#475A99", fontFamily: "Poppins-SemiBold" }, // Default active item text style
 }) => {
   const [value, setValue] = useState<string | null>(null); // State for the selected value
   const [isFocus, setIsFocus] = useState<boolean>(false); // State to track if dropdown is focused
@@ -35,14 +40,39 @@ const DropdownComponent: React.FC<DropdownComponentProps> = ({
     }
   };
 
+  const renderDropdownItem = (
+    item: { label: string; value: string },
+    selected?: boolean,
+  ) => {
+    const isSelected = selected ?? false;
+
+    return (
+      <View
+        style={[
+          styles.itemContainer,
+          selected && { backgroundColor: activeColor }, // Apply active color if the item is selected
+        ]}
+      >
+        <Text
+          style={[
+            styles.itemTextStyle,
+            selected && activeTextStyle, // Apply custom active text style if selected
+          ]}
+        >
+          {item.label}
+        </Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
       {/* Optional label rendering */}
-      {/* {label && (
+      {label && (
         <Text style={[styles.label, labelStyle, isFocus && { color: "blue" }]}>
           {label}
         </Text>
-      )} */}
+      )}
       <Dropdown
         style={[
           styles.dropdown,
@@ -69,6 +99,8 @@ const DropdownComponent: React.FC<DropdownComponentProps> = ({
         renderLeftIcon={renderLeftIcon} // Render icon if provided
         fontFamily="Poppins-Regular" // Set the font family for the dropdown
         itemTextStyle={styles.itemTextStyle} // Apply custom styling for each item
+        activeColor={activeColor} // Set the active item background color
+        renderItem={(item, selected) => renderDropdownItem(item, selected)}
       />
     </View>
   );
@@ -116,18 +148,23 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-SemiBold", // Font family for selected text
     color: "#475A99", // Color for selected text
   },
+  itemContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+  },
   itemTextStyle: {
     fontFamily: "Poppins-Regular", // Font family for each item in the dropdown
     fontSize: 14, // Font size for items
     color: "#000", // Color for items
   },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
     fontFamily: "Poppins-Regular",
+  },
+  selectedItem: {
+    fontSize: 16,
+    color: "#475A99",
+    fontFamily: "Poppins-SemiBold",
   },
 });
