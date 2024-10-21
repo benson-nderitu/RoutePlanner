@@ -147,33 +147,38 @@ export default function Page() {
   };
 
   const submitForm = () => {
-    const form = new FormData();
-    form.append("Territory", territory || "");
-    form.append("Month", month || "");
-    form.append("Week", week || "");
-    form.append("Day", day || "");
-    form.append("Date", dayjs(date).format("DD/MM/YYYY"));
-    form.append("Agent", agent || "");
-    form.append("Region", region || "");
-    form.append(
-      "Institutions",
-      institution.map((inst) => inst.label).join(", "),
-    );
-
     setLoading(true);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    fetch(
-      "https://script.google.com/macros/s/AKfycbx9sA81Vm2LVDzOiT4yI3ofMxJHK0XYjVEn5tJYbxYzI9mV2smf89qW3RTmcoMOyXjP/exec",
-      {
-        method: "POST",
-        body: form,
-      },
-    )
-      .then((response) => response.text())
-      .then((message) => {
+
+    // post data 
+    const raw = JSON.stringify({
+      "row": [
+        territory,
+        month,
+        week,
+        day,
+        dayjs(date).format("DD/MM/YYYY"),
+        agent,
+        region,
+        institution.map((inst:any) => inst.label).join(", ")
+      ]
+    });
+    
+    const requestOptions:any = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    };
+    
+    fetch("https://typingsprint.com/row", requestOptions)
+      .then((response) => response.json())
+      .then((result) =>{
+        setLoading(false);
         Toast.show({
           text1: "Response",
-          text2: message,
+          text2: "Form submitted successfully",
           type: "success",
           position: "top",
           visibilityTime: 4000,
@@ -191,21 +196,20 @@ export default function Page() {
           },
         });
       })
-      .catch((error) => {
+      .catch((error) =>{
+        setLoading(false);
         Toast.show({
           text1: "Error",
-          text2:
-            "There was a problem sending your Data. Please try again later.",
+          text2:error.message,
           type: "error",
           position: "top",
           visibilityTime: 4000,
           autoHide: true,
         });
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false); // Reset loading regardless of success or error
       });
+
+
+    // end post
   };
 
   return (
