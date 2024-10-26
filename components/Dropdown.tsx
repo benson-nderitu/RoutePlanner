@@ -14,7 +14,7 @@ interface DropdownComponentProps {
   labelStyle?: object; // Optional styles for the label
   activeColor?: string; // Optional prop for active item background color
   activeTextStyle?: object; // Optional custom text style for active/selected item
-  value?: string;
+  value?: string | null;
 }
 
 const DropdownComponent: React.FC<DropdownComponentProps> = ({

@@ -48,7 +48,7 @@ export default function Page() {
   const [agent, setAgent] = useState<string | null>(null);
   const [region, setRegion] = useState<string | null>(null);
   const [filteredRegions, setFilteredRegions] = useState<Region[]>([]);
-  const [institution, setInstitution] = useState<Institution | null>(null);
+  const [institution, setInstitution] = useState<string[]>([]);
   const [filteredInstitutions, setFilteredInstitutions] = useState<
     Institution[]
   >([]);
@@ -147,34 +147,36 @@ export default function Page() {
   };
 
   const submitForm = () => {
+    if (!(territory || week || institution.length > 0 || day)) return false;
     setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-
-    // post data 
+    // post data
     const raw = JSON.stringify({
-      "row": [
+      row: [
         territory,
         month,
-        week,
+        weeks.find((w) => w.value === week)?.label,
         day,
         dayjs(date).format("DD/MM/YYYY"),
         agent,
         region,
-        institution.map((inst:any) => inst.label).join(", ")
-      ]
+        institution?.join(", "),
+      ],
     });
-    
-    const requestOptions:any = {
+
+    console.log(raw);
+
+    const requestOptions: any = {
       method: "POST",
       headers: myHeaders,
       body: raw,
     };
-    
+
     fetch("https://typingsprint.com/row", requestOptions)
       .then((response) => response.json())
-      .then((result) =>{
+      .then((result) => {
         setLoading(false);
         Toast.show({
           text1: "Response",
@@ -196,18 +198,17 @@ export default function Page() {
           },
         });
       })
-      .catch((error) =>{
+      .catch((error) => {
         setLoading(false);
         Toast.show({
           text1: "Error",
-          text2:error.message,
+          text2: error.message,
           type: "error",
           position: "top",
           visibilityTime: 4000,
           autoHide: true,
         });
       });
-
 
     // end post
   };
@@ -233,7 +234,7 @@ export default function Page() {
                 data={territories}
                 placeholder="Select Territory"
                 value={territory}
-                onChange={(item) => setTerritory(item.value)}
+                onChangeValue={(item: any) => setTerritory(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
@@ -250,7 +251,7 @@ export default function Page() {
                 data={months}
                 placeholder="Select Month"
                 value={month}
-                onChange={(item) => setMonth(item.value)}
+                onChangeValue={(item: any) => setMonth(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
@@ -267,7 +268,7 @@ export default function Page() {
                 data={weeks}
                 placeholder="Select Week"
                 value={week}
-                onChange={(item) => setWeek(item.value)}
+                onChangeValue={(item: any) => setWeek(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
@@ -284,7 +285,7 @@ export default function Page() {
                 data={days}
                 placeholder="Select Day"
                 value={day}
-                onChange={(item) => setDay(item.value)}
+                onChangeValue={(item: any) => setDay(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}

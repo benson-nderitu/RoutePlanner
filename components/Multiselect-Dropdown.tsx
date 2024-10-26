@@ -27,17 +27,16 @@ const MultiSelectComponent: React.FC<MultiSelectComponentProps> = ({
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
   const handleChange = (item: { label: string; value: string }) => {
-    const newSelected = selected.includes(item.value)
-      ? selected.filter((i) => i !== item.value)
-      : [...selected, item.value];
+    const newSelected = selected.includes(item.label)
+      ? selected.filter((i) => i !== item.label)
+      : [...selected, item.label];
     setIsFocus(false);
-
     setSelected(newSelected);
     onChangeValue(newSelected);
   };
 
   const renderItem = (item: { label: string; value: string }) => {
-    const isSelected = selected.includes(item.value);
+    const isSelected = selected.includes(item.label);
 
     return (
       <TouchableOpacity
