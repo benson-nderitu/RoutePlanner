@@ -24,16 +24,17 @@ const DropdownComponent: React.FC<DropdownComponentProps> = ({
   dropdownStyle = {},
   onChangeValue,
   renderLeftIcon, // Optional icon rendering prop
+  value,
   label, // Add label prop
   labelStyle, // Add optional label style
   activeColor = "#D3E9FF", // Default active color for selected item background
   activeTextStyle = { color: "#475A99", fontFamily: "Poppins-SemiBold" }, // Default active item text style
 }) => {
-  const [value, setValue] = useState<string | null>(null); // State for the selected value
+  // const [value, setValue] = useState<string | null>(null); // State for the selected value
   const [isFocus, setIsFocus] = useState<boolean>(false); // State to track if dropdown is focused
 
   const handleOnChange = (item: { label: string; value: string }) => {
-    setValue(item.value);
+    // setValue(item.value);
     setIsFocus(false);
     if (onChangeValue) {
       onChangeValue(item.value); // Notify parent about value change

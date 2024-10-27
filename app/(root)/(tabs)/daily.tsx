@@ -24,12 +24,12 @@ const App: React.FC = () => {
           ref={webViewRef} // Set the reference
           style={styles.webView}
           source={{
-            uri: "https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAf9rZzVUQ0VINTBGNlRDN1dRRDJHSTdLTjVYMUZKUC4u",
+            uri: "https://forms.office.com/Pages/ResponsePage.aspx?id=DQSIkWdsW0yxEjajBLZtrQAAAAAAAAAAAANAAf9rZzVUM1czODc3UUtCVlNYT00wTUVVTFZMNEc5SC4u",
           }}
         />
         <FAB
           style={styles.fab}
-          icon={() => <Ionicons name="refresh" size={24} color="white" />} // Using the refresh icon
+          icon={() => <Ionicons name="refresh" size={25} color="white" />} // Using the refresh icon
           onPress={reloadWebView}
         />
       </SignedIn>
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
-    margin: 0,
     right: 5,
     top: 2,
     backgroundColor: "purple",

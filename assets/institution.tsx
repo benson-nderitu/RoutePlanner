@@ -1,6 +1,6 @@
 import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Text,
   View,
@@ -23,6 +23,7 @@ import Toast from "react-native-toast-message";
 import ToastConfig from "../../../utils/toastconfig";
 
 import institutionsData from "../../data/Institutions.json";
+import InputComponent from "@/components/FormInputField";
 
 interface Agent {
   label: string;
@@ -54,6 +55,8 @@ export default function Page() {
   >([]);
   const [isFocus, setIsFocus] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const toastRef = useRef(null);
 
   // Dropdown Data
   const territories = [
@@ -120,7 +123,7 @@ export default function Page() {
       }));
       setFilteredRegions(associatedRegions);
       setRegion(null); // Reset region selection
-      setInstitution(null); // Reset institution selection
+      setInstitution([]); // Reset institution selection
       setFilteredInstitutions([]); // Reset institutions when agent changes
     } else {
       setFilteredRegions([]); // Clear regions if no agent is selected
@@ -136,7 +139,7 @@ export default function Page() {
           value: item.ID, // Since `ID` is a unique identifier for institutions
         }));
       setFilteredInstitutions(associatedInstitutions);
-      setInstitution(null); // Reset institution selection
+      setInstitution([]); // Reset institution selection
     } else {
       setFilteredInstitutions([]); // Clear institutions if no region is selected
     }
@@ -147,7 +150,41 @@ export default function Page() {
   };
 
   const submitForm = () => {
-    if (!(territory || week || institution.length > 0 || day)) return false;
+    if (
+      !(
+        territory &&
+        month &&
+        week &&
+        day &&
+        agent &&
+        region &&
+        institution.length > 0
+      )
+    ) {
+      setLoading(false);
+      Toast.show({
+        text1: "Error❕: All Fields Required",
+        text2: "Please fill all the fields before submitting.",
+        type: "error",
+        position: "top",
+        visibilityTime: 3000,
+        autoHide: true,
+      });
+      return;
+    }
+    // if (institution.length === 0) {
+    //   setLoading(false);
+    //   Toast.show({
+    //     text1: "Multiselect Error❕: All Fields Required",
+    //     text2: "Please fill all the fields before submitting.",
+    //     type: "error",
+    //     position: "top",
+    //     visibilityTime: 3000,
+    //     autoHide: true,
+    //   });
+    //   return;
+    // }
+
     setLoading(true);
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -179,11 +216,11 @@ export default function Page() {
       .then((result) => {
         setLoading(false);
         Toast.show({
-          text1: "Response",
+          text1: "Success ✔",
           text2: "Form submitted successfully",
           type: "success",
           position: "top",
-          visibilityTime: 4000,
+          visibilityTime: 3000,
           autoHide: true,
           onHide: () => {
             // Reset the form after successful submission
@@ -194,18 +231,18 @@ export default function Page() {
             setDate(dayjs());
             setAgent(null);
             setRegion(null);
-            setInstitution(null);
+            setInstitution([]);
           },
         });
       })
       .catch((error) => {
         setLoading(false);
         Toast.show({
-          text1: "Error",
+          text1: "Error ❕❕",
           text2: error.message,
           type: "error",
           position: "top",
-          visibilityTime: 4000,
+          visibilityTime: 3000,
           autoHide: true,
         });
       });
@@ -216,7 +253,7 @@ export default function Page() {
   return (
     <View>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView className="bg-[#e5e5e5]">
+      <SafeAreaView className="bg-[#e9effc]">
         <SignedIn>
           <ScrollView>
             <View className="pl-4 pr-4">
@@ -243,6 +280,39 @@ export default function Page() {
                   />
                 )}
               />
+
+              <InputComponent
+                placeholder="Enter your name"
+                onPress={(value) => console.log("Pressed with value:", value)}
+              />
+
+              <View className="mb-[14px] bg-white rounded-[10px]">
+                <Text className="absolute bg-white text-[#4c4c4c] left-[22px] top-2 z-[999] px-2 text-[10px] font-PoppinsRegular">
+                  Name
+                </Text>
+                <View style={{ padding: 16 }}>
+                  <TouchableOpacity
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      borderWidth: 0.5,
+                      borderColor: "gray",
+                      borderRadius: 8,
+                      padding: 8,
+                      marginBottom: 10,
+                      height: 60,
+                      paddingHorizontal: 8,
+                    }}
+                    className="flex flex-row  rounded-[8px] bg-white px-2 mb-[14px] border-[0.5px] border-gray-300 font-PoppinsRegular"
+                  >
+                    <AntDesign
+                      name="user"
+                      style={styles.icon}
+                      color={isFocus ? "blue" : "black"}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               {/* Month Dropdown */}
               <DropdownComponent
@@ -409,11 +479,11 @@ export default function Page() {
               />
             </View>
 
-            <View
-              className="items-center justify-center bg-white pb-4"
-              style={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
-            >
-              {/* Loading Indicator */}
+            <View className="items-center justify-center bg-transparent pb-4">
+              {/* Toast component */}
+              <ToastConfig />
+
+              {/* Loading(Spinner) Indicator */}
               {loading && (
                 <View className="flex-row justify-center items-center mb-0 mt-5">
                   <ActivityIndicator size="large" color="#1D4ED8" />
@@ -422,19 +492,17 @@ export default function Page() {
                   </Text>
                 </View>
               )}
-              {/* Toast component */}
 
               <CustomButton
                 title={"Submit"}
-                className="w-11/12 mb-[50px] mt-[50px] rounded-full"
+                className="w-11/12 mb-[50px] mt-[50px] rounded-[8px]"
                 onPress={() => {
                   // Call the submitForm function to send data and show response
                   submitForm();
                 }}
               />
-              <ToastConfig />
             </View>
-            <View className="h-12 mb-10 bg-white"></View>
+            <View className="h-12 mb-10 bg-transparent"></View>
           </ScrollView>
         </SignedIn>
         <SignedOut>

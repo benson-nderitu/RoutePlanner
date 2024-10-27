@@ -1,6 +1,6 @@
 import { SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { Link } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Text,
   View,
@@ -48,12 +48,14 @@ export default function Page() {
   const [agent, setAgent] = useState<string | null>(null);
   const [region, setRegion] = useState<string | null>(null);
   const [filteredRegions, setFilteredRegions] = useState<Region[]>([]);
-  const [institution, setInstitution] = useState<Institution | null>(null);
+  const [institution, setInstitution] = useState<string[]>([]);
   const [filteredInstitutions, setFilteredInstitutions] = useState<
     Institution[]
   >([]);
   const [isFocus, setIsFocus] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
+
+  const toastRef = useRef(null);
 
   // Dropdown Data
   const territories = [
@@ -120,7 +122,7 @@ export default function Page() {
       }));
       setFilteredRegions(associatedRegions);
       setRegion(null); // Reset region selection
-      setInstitution(null); // Reset institution selection
+      setInstitution([]); // Reset institution selection
       setFilteredInstitutions([]); // Reset institutions when agent changes
     } else {
       setFilteredRegions([]); // Clear regions if no agent is selected
@@ -136,7 +138,7 @@ export default function Page() {
           value: item.ID, // Since `ID` is a unique identifier for institutions
         }));
       setFilteredInstitutions(associatedInstitutions);
-      setInstitution(null); // Reset institution selection
+      setInstitution([]); // Reset institution selection
     } else {
       setFilteredInstitutions([]); // Clear institutions if no region is selected
     }
@@ -147,36 +149,77 @@ export default function Page() {
   };
 
   const submitForm = () => {
-    const form = new FormData();
-    form.append("Territory", territory || "");
-    form.append("Month", month || "");
-    form.append("Week", week || "");
-    form.append("Day", day || "");
-    form.append("Date", dayjs(date).format("DD/MM/YYYY"));
-    form.append("Agent", agent || "");
-    form.append("Region", region || "");
-    form.append(
-      "Institutions",
-      institution.map((inst) => inst.label).join(", "),
-    );
+    if (
+      !(
+        territory &&
+        month &&
+        week &&
+        day &&
+        agent &&
+        region &&
+        institution.length > 0
+      )
+    ) {
+      setLoading(false);
+      Toast.show({
+        text1: "Error❕: All Fields Required",
+        text2: "Please fill all the fields before submitting.",
+        type: "error",
+        position: "top",
+        visibilityTime: 3000,
+        autoHide: true,
+      });
+      return;
+    }
+    // if (institution.length === 0) {
+    //   setLoading(false);
+    //   Toast.show({
+    //     text1: "Multiselect Error❕: All Fields Required",
+    //     text2: "Please fill all the fields before submitting.",
+    //     type: "error",
+    //     position: "top",
+    //     visibilityTime: 3000,
+    //     autoHide: true,
+    //   });
+    //   return;
+    // }
 
     setLoading(true);
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-    fetch(
-      "https://script.google.com/macros/s/AKfycbx9sA81Vm2LVDzOiT4yI3ofMxJHK0XYjVEn5tJYbxYzI9mV2smf89qW3RTmcoMOyXjP/exec",
-      {
-        method: "POST",
-        body: form,
-      },
-    )
-      .then((response) => response.text())
-      .then((message) => {
+    // post data
+    const raw = JSON.stringify({
+      row: [
+        territory,
+        month,
+        weeks.find((w) => w.value === week)?.label,
+        day,
+        dayjs(date).format("DD/MM/YYYY"),
+        agent,
+        region,
+        institution?.join(", "),
+      ],
+    });
+
+    console.log(raw);
+
+    const requestOptions: any = {
+      method: "POST",
+      headers: myHeaders,
+      body: raw,
+    };
+
+    fetch("https://typingsprint.com/row", requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        setLoading(false);
         Toast.show({
-          text1: "Response",
-          text2: message,
+          text1: "Success ✔",
+          text2: "Form submitted successfully",
           type: "success",
           position: "top",
-          visibilityTime: 4000,
+          visibilityTime: 3000,
           autoHide: true,
           onHide: () => {
             // Reset the form after successful submission
@@ -187,31 +230,29 @@ export default function Page() {
             setDate(dayjs());
             setAgent(null);
             setRegion(null);
-            setInstitution(null);
+            setInstitution([]);
           },
         });
       })
       .catch((error) => {
+        setLoading(false);
         Toast.show({
-          text1: "Error",
-          text2:
-            "There was a problem sending your Data. Please try again later.",
+          text1: "Error ❕❕",
+          text2: error.message,
           type: "error",
           position: "top",
-          visibilityTime: 4000,
+          visibilityTime: 3000,
           autoHide: true,
         });
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false); // Reset loading regardless of success or error
       });
+
+    // end post
   };
 
   return (
     <View>
       <StatusBar barStyle="light-content" />
-      <SafeAreaView className="bg-[#e5e5e5]">
+      <SafeAreaView className="bg-[#e9effc]">
         <SignedIn>
           <ScrollView>
             <View className="pl-4 pr-4">
@@ -229,7 +270,7 @@ export default function Page() {
                 data={territories}
                 placeholder="Select Territory"
                 value={territory}
-                onChange={(item) => setTerritory(item.value)}
+                onChangeValue={(item: any) => setTerritory(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
@@ -246,7 +287,7 @@ export default function Page() {
                 data={months}
                 placeholder="Select Month"
                 value={month}
-                onChange={(item) => setMonth(item.value)}
+                onChangeValue={(item: any) => setMonth(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
@@ -263,7 +304,7 @@ export default function Page() {
                 data={weeks}
                 placeholder="Select Week"
                 value={week}
-                onChange={(item) => setWeek(item.value)}
+                onChangeValue={(item: any) => setWeek(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
@@ -280,7 +321,7 @@ export default function Page() {
                 data={days}
                 placeholder="Select Day"
                 value={day}
-                onChange={(item) => setDay(item.value)}
+                onChangeValue={(item: any) => setDay(item)}
                 renderLeftIcon={() => (
                   <AntDesign
                     style={styles.icon}
@@ -404,11 +445,11 @@ export default function Page() {
               />
             </View>
 
-            <View
-              className="items-center justify-center bg-white pb-4"
-              style={{ borderTopLeftRadius: 20, borderTopRightRadius: 20 }}
-            >
-              {/* Loading Indicator */}
+            <View className="items-center justify-center bg-transparent pb-4">
+              {/* Toast component */}
+              <ToastConfig />
+
+              {/* Loading(Spinner) Indicator */}
               {loading && (
                 <View className="flex-row justify-center items-center mb-0 mt-5">
                   <ActivityIndicator size="large" color="#1D4ED8" />
@@ -417,24 +458,24 @@ export default function Page() {
                   </Text>
                 </View>
               )}
-              {/* Toast component */}
 
               <CustomButton
                 title={"Submit"}
-                className="w-11/12 mb-[50px] mt-[50px] rounded-full"
+                className="w-11/12 mb-[50px] mt-[50px] rounded-[8px]"
                 onPress={() => {
                   // Call the submitForm function to send data and show response
                   submitForm();
                 }}
               />
-              <ToastConfig />
             </View>
-            <View className="h-12 mb-10 bg-white"></View>
+            <View className="h-12 mb-10 bg-transparent"></View>
           </ScrollView>
         </SignedIn>
         <SignedOut>
           <Link href="/sign-in">
-            <Text>Sign In</Text>
+            <View className="flex-1 items-center justify-center  bg-[#24292f] p-4 ">
+              <Text className="text-white text-lg">Sign In</Text>
+            </View>
           </Link>
         </SignedOut>
       </SafeAreaView>

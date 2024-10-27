@@ -5,9 +5,9 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 
 // Define types for the component props
 interface MultiSelectComponentProps {
-  data: { label: string; value: string }[];
-  value: string[];
-  onChangeValue: (selected: string[]) => void;
+  data: { label: string; value: string }[]; // Data prop
+  value: string[]; // Array of selected values
+  onChangeValue: (selected: string[]) => void; // Callback for when selected values change
   placeholder?: string;
   renderLeftIcon?: () => JSX.Element;
   label?: string; // Optional label text
@@ -20,36 +20,18 @@ const MultiSelectComponent: React.FC<MultiSelectComponentProps> = ({
   onChangeValue,
   placeholder,
   renderLeftIcon,
-  label, // Add label prop
-  labelStyle, // Add optional label style
+  label,
+  labelStyle,
 }) => {
-  const [selected, setSelected] = useState<string[]>(value || []);
   const [isFocus, setIsFocus] = useState<boolean>(false);
 
-  const handleChange = (item: { label: string; value: string }) => {
-    const newSelected = selected.includes(item.label)
-      ? selected.filter((i) => i !== item.label)
-      : [...selected, item.label];
-    setIsFocus(false);
-    setSelected(newSelected);
-    onChangeValue(newSelected);
-  };
+  const handleSelectionChange = (selectedValues: string[]) => {
+    // Map selected values back to labels
+    const selectedLabels = data
+      .filter((item) => selectedValues.includes(item.value))
+      .map((item) => item.label); // Extract corresponding labels
 
-  const renderItem = (item: { label: string; value: string }) => {
-    const isSelected = selected.includes(item.label);
-
-    return (
-      <TouchableOpacity
-        style={[styles.item, isSelected && styles.selectedItem]}
-        onPress={() => handleChange(item)}
-      >
-        {renderLeftIcon && renderLeftIcon()}
-        <Text style={[styles.itemText, isSelected && styles.textSelected]}>
-          {item.label}
-        </Text>
-        {isSelected && <AntDesign name="check" size={20} color="green" />}
-      </TouchableOpacity>
-    );
+    onChangeValue(selectedLabels); // Send the labels instead of values
   };
 
   return (
@@ -71,14 +53,31 @@ const MultiSelectComponent: React.FC<MultiSelectComponentProps> = ({
         valueField="value"
         placeholder={placeholder || "Select item(s)"}
         searchPlaceholder="Search..."
-        value={selected}
+        value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        onChange={setSelected}
-        renderItem={renderItem}
-        selectedStyle={styles.selectedStyle} // Style for selected view
-        containerStyle={styles.multiSelectContainer} // Style for dropdown container
+        onChange={handleSelectionChange} // Use the new handler
+        selectedStyle={styles.selectedStyle}
+        containerStyle={styles.multiSelectContainer}
         renderLeftIcon={renderLeftIcon}
+        renderItem={(item, selected) => (
+          <TouchableOpacity
+            style={[styles.item, selected && styles.selectedItem]}
+            onPress={() =>
+              onChangeValue(
+                selected
+                  ? value.filter((v) => v !== item.value)
+                  : [...value, item.value, item.label],
+              )
+            }
+          >
+            {renderLeftIcon && renderLeftIcon()}
+            <Text style={[styles.itemText, selected && styles.textSelected]}>
+              {item.label}
+            </Text>
+            {selected && <AntDesign name="check" size={20} color="green" />}
+          </TouchableOpacity>
+        )}
       />
     </View>
   );

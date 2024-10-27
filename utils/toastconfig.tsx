@@ -41,49 +41,60 @@ const ToastConfig = forwardRef<ToastType, any>(
 // Styles for the toast messages
 const styles = StyleSheet.create({
   successToast: {
-    backgroundColor: "#4CAF50",
-    padding: 10,
+    backgroundColor: "green",
+    padding: 15,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 5,
-    marginBottom: 10,
+    marginTop: -200,
+    paddingBottom: 40,
   },
   errorToast: {
-    backgroundColor: "#F44336",
-    padding: 10,
+    backgroundColor: "red",
+    padding: 15,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 2,
     elevation: 5,
-    marginBottom: 10,
+    marginTop: -200,
+    paddingBottom: 40,
   },
   text1Container: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 5,
+    justifyContent: "center",
+    alignContent: "center",
+    paddingBottom: 10,
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#fff",
+    color: "#fff",
+    fontFamily: "Poppins-SemiBold",
   },
   successTextBold: {
-    fontWeight: "bold",
     fontSize: 16,
     color: "#fff",
+    fontFamily: "Poppins-SemiBold", // Font family for text1
   },
   successText: {
     fontSize: 14,
     color: "#fff",
+    fontFamily: "Poppins-Light", // Font family for text2
   },
   errorTextBold: {
-    fontWeight: "bold",
     fontSize: 16,
     color: "#fff",
+    fontFamily: "Poppins-SemiBold", // Font family for text1
   },
   errorText: {
     fontSize: 14,
     color: "#fff",
+    fontFamily: "Poppins-Light", // Font family for text2
   },
 });
 
